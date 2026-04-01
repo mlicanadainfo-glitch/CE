@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF CE Test 40 – Compréhension écrite</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,sans-serif;background:#f4f3ef;color:#1a1a1a;padding:1rem}
+#app{max-width:860px;margin:0 auto}
+.header{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.header img{height:48px}
+.header-right{text-align:right}
+.header-title{font-size:16px;font-weight:700;color:#1a1a1a}
+.header-sub{font-size:12px;color:#888;margin-top:2px}
+.prog-wrap{margin-bottom:1rem}
+.prog-bar{height:5px;background:#e0ddd5;border-radius:3px}
+.prog-fill{height:100%;background:#1D9E75;border-radius:3px;transition:width .35s}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px}
+.nav{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:.85rem}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid #d0cdc5;background:#fff;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a1a;transition:all .2s}
+.btn:hover{background:#f4f3ef}
+.btn-results{border-color:#0F6E56;color:#0F6E56;font-weight:600;margin-left:auto}
+.btn-results:hover{background:#E1F5EE}
+.textbox{background:#f8f7f3;border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin-bottom:1.1rem;font-size:15px;line-height:1.85;color:#1a1a1a;width:100%}
+.textbox mark{background:#FAC775;color:#412402;border-radius:3px;padding:1px 3px;font-style:normal}
+.key-label{margin-bottom:.85rem;font-size:12px;font-weight:600;color:#92560A;background:#FEF3DC;border:1px solid #FAC775;border-radius:6px;display:inline-block;padding:4px 10px}
+.question{font-size:16px;font-weight:600;margin-bottom:.9rem}
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.choice{padding:11px 15px;border:1px solid #d0cdc5;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:10px;background:#fff;width:100%}
+.choice:hover:not(.correct):not(.wrong){background:#f4f3ef}
+.choice .badge{font-weight:600;min-width:22px}
+.choice.correct{border-color:#0F6E56;background:#E1F5EE;color:#085041}
+.choice.wrong{border-color:#993C1D;background:#FAECE7;color:#4A1B0C}
+.feedback.ok{background:#E1F5EE;color:#085041;border:1px solid #5DCAA5;border-radius:8px;padding:10px 14px;margin-top:.75rem}
+.feedback.ko{background:#FAECE7;color:#4A1B0C;border:1px solid #F0997B;border-radius:8px;padding:10px 14px;margin-top:.75rem}
+/* Summary */
+.summary-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.score-big{font-size:42px;font-weight:700;color:#1D9E75}
+.nclc-badge{font-size:28px;font-weight:700;color:#BA7517;margin:8px 0}
+.grid{display:flex;flex-wrap:wrap;gap:6px;margin:1rem 0}
+.gcell{width:34px;height:34px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;transition:opacity .2s}
+.gcell:hover{opacity:.8}
+.gcell.ok{background:#1D9E75}
+.gcell.ko{background:#993C1D}
+.gcell.na{background:#ccc;color:#555}
+.btn-report{padding:10px 20px;background:#1D9E75;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;margin-right:8px;margin-top:8px}
+.btn-restart{padding:10px 20px;background:#fff;color:#1a1a1a;border:1px solid #d0cdc5;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;margin-top:8px}
+.note-small{font-size:11px;color:#aaa;margin-top:8px}
+/* Report */
+.report-q{background:#fff;border:1px solid #e0ddd5;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.report-q .r-text{background:#f8f7f3;border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:.75rem 1rem;font-size:14px;line-height:1.8;margin-bottom:.75rem}
+.r-correct{color:#085041;font-size:13px;font-weight:600;padding:4px 0}
+.r-wrong{color:#4A1B0C;font-size:13px;font-weight:600;padding:4px 0}
+.btn-back{padding:8px 16px;border-radius:8px;border:1px solid #0F6E56;background:#fff;color:#0F6E56;cursor:pointer;font-size:14px;font-weight:600;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="view"></div>
+</div>
+<script type="application/json" id="qdata">
+[
+  {
+    "t": "La bibliothèque de Chatou vous invite\nà passer un moment parent-enfant\nmercredi prochain.\n\nVenez avec votre enfant écrire une histoire\navec des dessins. À la fin de la journée,\nnous imprimerons ces histoires et vous\npourrez repartir avec un petit livre !",
+    "q": "Qu'est-ce que la bibliothèque de Chatou organise ?",
+    "c": ["La décoration de ses salles.", "La lecture d'un roman jeunesse.", "Une activité à faire en famille.", "Une rencontre avec un auteur."],
+    "a": 2,
+    "k": "moment parent-enfant"
+  },
+  {
+    "t": "La société des transports T2C offre\nplusieurs moyens de transport\npublics : trente-quatre stations\nde tramway, de train et de métro\nen journée, 23 lignes de bus,\ndont une de nuit.\nPlus de renseignements sur notre\nsite www.t2c.fr !",
+    "q": "Quel transport circule après 23h ?",
+    "c": ["Le bus.", "Le métro.", "Le train.", "Le tramway."],
+    "a": 0,
+    "k": "dont une de nuit"
+  },
+  {
+    "t": "Salut Anthony,\n\nJe t'annonce une bonne nouvelle : j'ai\ntrouvé un poste de vendeur pour cet été !\nC'est dans une boutique du centre-ville de\nBordeaux. C'est un peu loin de la maison\nmais en voiture j'y serai en 20 minutes.\nOn fêtera ça samedi !\nSimon",
+    "q": "Qu'est-ce que Simon va faire ?",
+    "c": ["Acheter une voiture.", "Aller chez Anthony.", "Faire des courses samedi.", "Travailler à Bordeaux."],
+    "a": 3,
+    "k": "boutique du centre-ville de"
+  },
+  {
+    "t": "IMAGES\n\nVous êtes passionné de photographie et vous\nvoulez partager vos créations ?\nInscrivez-vous au prix du « Petit Reporter » :\nenvoyez une photo sur le thème de l'amitié au\nclub « Images » ! Un appareil photo à gagner !\nInscription :\nwww.clubImages.fr/Prix PetitReporter",
+    "q": "Que propose le club « images » ?",
+    "c": ["D'acheter du matériel en soldes.", "De participer à un concours.", "De rencontrer des professionnels.", "De suivre des cours débutants."],
+    "a": 1,
+    "k": "Inscrivez-vous au prix du"
+  },
+  {
+    "t": "SAMEDI 29 JUIN,\nVENEZ COURIR 10KM\nPOUR AIDER L'ASSOCIATION\n« TOUT ENSEMBLE POUR LA PAIX ».\nRENDEZ-VOUS À 10H, AU PARC DE\nVINCENNES.\nAMBIANCE SYMPATHIQUE ET REPAS\nOFFERT POUR LES SPORTIFS,\nVENEZ NOMBREUX !",
+    "q": "Qu'est-ce que cette annonce propose ?",
+    "c": ["D'aider à organiser une fête.", "De devenir membre d'une association.", "De distribuer des repas gratuits.", "De participer à un événement sportif."],
+    "a": 3,
+    "k": "VENEZ COURIR 10KM"
+  },
+  {
+    "t": "De : cannelle@lilo.com\nÀ : Elke@mail.com\n\nSalut Elke,\nC'est bientôt la fête de nos 20 ans de\nmariage ! Beaucoup d'invités viendront\navec leurs enfants. Comme tu adores\nles petits, pourrais-tu t'occuper d'eux\nen journée ? Quand ils seront couchés,\nnous pourrons danser tous ensemble !\nMerci, bisous.\nCannelle",
+    "q": "Que demande Cannelle à son amie ?",
+    "c": ["D'écrire aux invités.", "D'organiser la fête.", "De garder des enfants.", "De préparer des danses."],
+    "a": 2,
+    "k": "pourrais-tu t'occuper d'eux"
+  },
+  {
+    "t": "Chers professeurs,\nChers étudiants,\n\nVenez rencontrer les nouveaux étudiants\nde la semaine !\n\nCe mardi, de 8 h 30 à 10 h 30.\nRendez-vous salle « Les Mimosas »\n\nJ. Lebon, directrice\nÉcole de langues ABC.",
+    "q": "Pourquoi Madame Lebon écrit-elle cette annonce ?",
+    "c": ["Pour changer un horaire.", "Pour organiser une fête.", "Pour présenter des élèves.", "Pour proposer une sortie."],
+    "a": 2,
+    "k": "les nouveaux étudiants"
+  },
+  {
+    "t": "Madame Chanmont,\n\nVous avez participé à notre concours et\nvous avez gagné un séjour d'une semaine\ntout compris (transport, hébergement,\nrestauration) pour deux personnes en Italie !\nPrenez contact par courriel avec notre service\nclientèle pour avoir toutes les informations.\n\nLe service commercial.",
+    "q": "Que doit faire madame Chanmont ?",
+    "c": ["Écrire un message.", "Prendre un billet d'avion.", "Réserver un hôtel.", "S'inscrire à un jeu."],
+    "a": 0,
+    "k": "Prenez contact par courriel"
+  },
+  {
+    "t": "Vous avez une expérience dans\nl'éducation ?\nVous avez du temps libre, et vous avez\nenvie d'aider des élèves en difficulté ?\n\nOffrez vos services de soutien scolaire\ndans notre association de quartier !\nÉcrivez-nous à\navotreservice@mandarine.fr",
+    "q": "Qu'est-ce que cette annonce propose ?",
+    "c": ["De donner des cours.", "De garder des enfants.", "De rencontrer des voisins.", "De suivre des formations."],
+    "a": 0,
+    "k": "soutien scolaire"
+  },
+  {
+    "t": "Marché facile est une application pour\ntéléphone portable qui vous conseille les\nbons fruits et légumes de saison dans\nles supermarchés. Elle donne aussi des\ninformations sur le fromage, la viande et\nle poisson.",
+    "q": "À quoi sert cette application ?",
+    "c": ["À acheter sur internet.", "À choisir ses produits.", "À noter les magasins.", "À trouver des recettes."],
+    "a": 1,
+    "k": "vous conseille les"
+  },
+  {
+    "t": "Montréal, la plus grande ville du Québec, figure\nen tête de liste des métropoles francophones.\n\nPartons à la découverte de ce morceau du Vieux Continent intégré\nau Nouveau Monde ! On la décrit comme la cité la plus européenne\nd'Amérique, mais, surtout, comme la plus américaine des francophones.\nEt c'est d'abord cet aspect-là qui surprend les Européens tout juste\narrivés dans cette ville pleine d'énergie et de caractère.",
+    "q": "Pourquoi cette ville est-elle particulière ?",
+    "c": ["C'est la destination préférée des touristes français.", "De plus en plus de jeunes souhaitent s'y installer.", "Elle réunit les caractéristiques de deux continents.", "On y entend des langues du monde entier."],
+    "a": 2,
+    "k": "la plus européenne"
+  },
+  {
+    "t": "SAUVEZ DES VIES\n\nTous les samedis pendant l'été, vous pouvez\n\ndonner votre sang pour les malades et les blessés.\n\nOù ?\n\nDans un camion spécialisé garé devant la mairie.\n\nNOUS AVONS BESOIN DE VOUS !",
+    "q": "Que propose cette annonce ?",
+    "c": ["D'aider des malades.", "De faire un don.", "De s'informer à la mairie.", "De travailler l'été."],
+    "a": 1,
+    "k": "donner votre sang"
+  },
+  {
+    "t": "Nous cherchons des acteurs sportifs\nEntre 18 et 45 ans. Expérience comme\nchanteur et danseur souhaitée. Le\ntournage se fera à Limoges. Si vous\nêtes intéressé(e), envoyez votre CV à\ncasting@art.com.",
+    "q": "Quelle activité est proposée dans cette annonce ?",
+    "c": ["Écrire une pièce.", "Jouer dans un film.", "Organiser un concert.", "Participer à une course."],
+    "a": 1,
+    "k": "Le tournage"
+  },
+  {
+    "t": "VOUS MANGEZ ITALIEN, DANSEZ LE\nFLAMENCO OU APPRENEZ LE SUÉDOIS ?\n\nPartagez vos images qui montrent que\nl'Europe fait partie de votre vie. Participer\nau concours « Fenêtres sur l'Europe ». À\ngagner : un séjour à Bruxelles ou un atelier\ncuisine.",
+    "q": "Que propose ce concours ?",
+    "c": ["De découvrir une langue.", "De faire un spectacle.", "D'envoyer des photos.", "D'inventer une recette."],
+    "a": 2,
+    "k": "Partagez vos images"
+  },
+  {
+    "t": "Lundi prochain, en France, les librairies\norganisent une soirée du livre de jeunesse.\nAu programme, des activités pour enfants et\ndes dégustations de desserts. On pourra aussi\nvoir sur grand écran les princes et princesses du cinéma.",
+    "q": "Que pourra-t-on faire aux soirées du livre de jeunesse ?",
+    "c": ["Écouter des chansons.", "Gagner des cadeaux.", "Goûter des recettes.", "Jouer dans un film."],
+    "a": 2,
+    "k": "dégustations de desserts"
+  },
+  {
+    "t": "Et si on partait vivre à la\nCampagne ?\n\nBeaucoup d'habitants de la ville rêvent d'une maison, d'un jardin potager. En justement, de plus en plus de régions et de villes s'organisent pour attirer ces candidats et leur famille au départ. Un salon est organisé sur cette question aujourd'hui à Paris. Selon un sondage, 30% des habitants de l'agglomération parisienne seraient prêts à partir. S'ils pouvaient pratiquer une activité professionnelle qui leur plaît, ils partiraient sans hésiter.\n\nD'après www.franceinfo.fr",
+    "q": "Selon cet article, à quelle condition les gens quitteraient la ville ?",
+    "c": ["Avoir un logement spacieux.", "Exercer un travail satisfaisant.", "Modifier le rythme quotidien.", "Se rapprocher du monde agricole."],
+    "a": 1,
+    "k": "ils partiraient sans hésiter"
+  },
+  {
+    "t": "La ville de Nantes a de quoi séduire grâce à son dynamisme culturel. Son renouveau, débuté il y a plus de deux décennies, est exceptionnel. Elle a retrouvé le goût du risque, un grain de folie et un peu de naïveté. Nantes, la bourgeoise cité des ducs de Bretagne est une vraie boîte à idées, toujours en quête de nouvelles manières de conjuguer le « vivre ensemble ». Pas étonnant qu'elle connaisse une des plus fortes croissances des métropoles de France.",
+    "q": "Qu'est-ce qui attire les gens à Nantes ?",
+    "c": ["Sa position géographique.", "Ses traditions régionales.", "Son ambiance créative.", "Son économie stable."],
+    "a": 2,
+    "k": "une vraie boîte à idées"
+  },
+  {
+    "t": "PEDAGOGIE\nTwitter dès l'école primaire, pour donner le goût d'écrire, de lire et de l'orthographe. Un instituteur raconte :\n« J'utilise Twitter dans ma classe depuis un an. Les productions d'élèves sont de plus en plus intéressantes. Grâce à Twitter, je peux approfondir les notions de façon concrète.\nLes activités scolaires paraissent artificielles, hors contexte voire dénuées de sens. Pourquoi essayer de maîtriser l'écriture ? Les enfants n'y songent même pas, car leurs travaux sont cantonnés à des cahiers, eux-mêmes enfermés dans des casiers ou des cartables. Ils n'ont pas l'occasion de partager leurs productions, de les confronter, d'argumenter leurs choix. »",
+    "q": "D'après cet article, qu'apporte l'utilisation de Twitter aux élèves ?",
+    "c": ["Ils apprennent à se servir correctement des réseaux sociaux.", "Ils communiquent plus facilement avec l'instituteur.", "Ils comprennent mieux l'intérêt des apprentissages proposés.", "Ils sont attentifs après un moment de détente."],
+    "a": 2,
+    "k": "approfondir les notions de façon concrète"
+  },
+  {
+    "t": "Les recherches sur le cerveau et le numérique n'en sont qu'à leurs débuts.\nSi le cerveau reste génétiquement constant, il s'adapte culturellement aux innovations de l'époque. Ainsi, depuis que nous utilisons les objets connectés, notre rapport à la mémoire a changé. Quant à la concentration, trois facteurs perturbent son fonctionnement : le fait de tenter de faire plusieurs tâches à la fois, celui d'être bombardé d'informations, et enfin celui d'être interrompu fréquemment par des notifications. Par conséquent, les apprentissages, l'assimilation des informations et la capacité d'enchaîner les tâches s'en trouvent ralentis.",
+    "q": "Qu'explique ce texte au sujet des outils numériques ?",
+    "c": ["Ils améliorent l'efficacité au travail.", "Ils dérèglent les rythmes biologiques.", "Ils fluidifient les relations sociales.", "Ils modifient les aptitudes mentales."],
+    "a": 3,
+    "k": "notre rapport à la mémoire a changé"
+  },
+  {
+    "t": "Il y a quelque chose de rare dans « Normandie nue » : ce film est résolument léger, tout en ayant du fond. À travers une histoire qui sert de fil conducteur cocasse et insolite – celle d'un artiste américain qui veut photographier des paysans dévêtus –, « Normandie nue » aborde la crise des éleveurs avec beaucoup d'humanité, notamment grâce au maire du village qui voit dans la venue du photographe l'occasion de faire valoir sa cause aux yeux de la planète. Parfois un peu maladroite, cette comédie amuse en caricaturant gentiment les médias, les artistes et les bobos parisiens en mal de verdure.",
+    "q": "Quelle est l'opinion du journaliste sur le film « Normandie nue » ?",
+    "c": ["Il est facile de s'identifier aux personnages.", "Les lieux de tournage sont authentiques.", "On y dresse un portrait juste de la société.", "Son humour fait passer un message sérieux."],
+    "a": 3,
+    "k": "résolument léger, tout en ayant du fond"
+  },
+  {
+    "t": "Mathieu Lagouanère et Élodie Calas, deux journalistes, ont fait un tour du monde avec une idée originale : provoquer des rencontres en faisant goûter le roquefort, un fromage traditionnel, fabriqué dans leur région. « Le roquefort était simplement un moyen de faire connaissance avec les habitants. Ses principales caractéristiques, les taches de moisissure et l'odeur, peuvent faire réagir », explique Mathieu. La société Roquefort leur a fourni les fromages. Ils ont raconté leurs aventures dans un blog de voyage.",
+    "q": "Quel était l'objectif de Mathieu et Élodie ?",
+    "c": ["Découvrir des recettes locales.", "Entrer en contact avec les gens.", "Réaliser une opération publicitaire.", "Vendre des spécialités françaises."],
+    "a": 1,
+    "k": "faire connaissance avec les habitants"
+  },
+  {
+    "t": "Dans le monde de l'éducation, la mode est au\n« Ludique »\n\nPas une description d'un nouveau matériel informatique sans l'utilisation de cet adjectif miraculeux. N'ayant rien de mieux à offrir, les publicitaires insistent sur le côté « ludique » et neutre de leur matériel, sous-entendant ainsi que les difficultés des enfants sont liées uniquement au côté poussiéreux de la présentation d'exercices et à l'ennui qu'ils suscitent. En changeant l'apparence, on suscitera l'intérêt et la réussite sera assurée. La rééducation risque d'être perçue comme la modernisation de la pédagogie sans autre questionnement sur l'échec de la pédagogie traditionnelle.",
+    "q": "Que reproche l'auteur du texte à la mode du ludique ?",
+    "c": ["Elle demande des connaissances techniques poussées.", "Elle empêche les jeunes utilisateurs de se concentrer.", "Elle masque les problèmes pédagogiques essentiels.", "Elle sert sans succès d'argument commercial."],
+    "a": 2,
+    "k": "sans autre questionnement sur l'échec de la pédagogie traditionnelle"
+  },
+  {
+    "t": "Elle devait être démolie et un nouveau lieu de culte reconstruit à l'arrière de l'église actuelle, le long du boulevard. Le projet, qui prévoyait la restructuration complète de l'îlot avec la création de logements sociaux, ne verra finalement pas le jour. La Ville et le diocèse ont pris la décision de conserver l'église Sainte-Madeleine considérant avec certains experts que sa démolition aurait causé la perte regrettable d'un élément important du patrimoine nantais. Des travaux d'urgence vont être réalisés avant le lancement d'un véritable programme de restauration et de mise en valeur du bâtiment.",
+    "q": "Selon cet article, quelle décision a été prise ?",
+    "c": ["Bâtir une église identique dans le quartier.", "Débuter le réaménagement du boulevard.", "Entreprendre une rénovation du lieu.", "Réhabiliter les logements sociaux existants."],
+    "a": 2,
+    "k": "programme de restauration et de mise en valeur"
+  },
+  {
+    "t": "La charte des Jeux olympiques est sans ambiguïté : les deux langues officielles du comité international olympique sont le français et l'anglais. Une étude permettant d'identifier la place et le statut de la langue française dans les organisations sportives internationales a été lancée en 2008 : les francophones sont présents dans les instances des fédérations sportives internationales, mais en nombre insuffisant aux postes de décision, les documents officiels étant rarement rédigés en français. Priorité a donc été accordée à l'aide à la traduction des textes et à la mobilisation des francophones dans leur ensemble, afin qu'ils s'entraident à accéder aux postes décisionnels.",
+    "q": "À quel constat a abouti l'enquête sur la place de la francophonie dans le mouvement sportif mondial ?",
+    "c": ["La langue française et l'anglais jouissent d'un statut équitable.", "Les ligues sportives internationales comptent peu de francophones.", "Les textes officiels et les règlements sont traduits en langue française.", "Très peu de francophones occupent des fonctions à responsabilité."],
+    "a": 3,
+    "k": "en nombre insuffisant aux postes de décision"
+  },
+  {
+    "t": "Les villes se montrent soucieuses d'améliorer leur qualité de l'air.\nUne solution : la plantation d'arbres. En effet, les arbres filtrent les particules contenues dans l'atmosphère.\nMais la plantation d'arbres doit être réfléchie. Il est pertinent de mettre des arbres le long des axes de circulation pour protéger les habitations des polluants, mais aussi dans les zones piétonnes. Le choix des arbres a aussi son importance. Les espèces d'arbres plantées il y a 50 ans ne répondent pas aux besoins d'aujourd'hui, car elles forment un couvercle retenant au sol la pollution. En revanche, les arbres aux feuilles poilues sont, eux, efficaces.",
+    "q": "À quelle condition les arbres peuvent-ils aider à combattre la pollution urbaine ?",
+    "c": ["S'ils appartiennent à une espèce adéquate.", "S'ils ont des feuilles persistantes en hiver.", "S'ils ont été plantés il y a longtemps.", "S'ils se trouvent loin des zones de logement."],
+    "a": 0,
+    "k": "Le choix des arbres a aussi son importance"
+  },
+  {
+    "t": "Les bénéfices du bio pour la santé et pour l'environnement sont aujourd'hui prouvés. Mais pour ses détracteurs, ce type de production ne serait pas viable, faute de rendements suffisants pour subvenir aux besoins d'une planète à la démographie galopante. Une idée répandue que réfutent des chercheurs européens qui affirment qu'il est possible de nourrir plus de 9 milliards d'êtres humains en 2050 avec 100% d'agriculture biologique, à deux conditions : réduire le gaspillage alimentaire et limiter la consommation de produits d'origine animale. Un défi de taille, alors que le bio ne représente que 1% de la surface agricole utile dans le monde.",
+    "q": "De quel défi est-il question ?",
+    "c": ["Augmenter la surface des terres agricoles.", "Garantir la qualité des aliments pour animaux.", "Généraliser l'agriculture biologique.", "Lutter contre la démographie galopante."],
+    "a": 2,
+    "k": "100% d'agriculture biologique"
+  },
+  {
+    "t": "Paris veut réduire de 30% l'exposition aux ondes des antennes-relais pour devenir la métropole la plus protectrice d'Europe. Maîtriser l'exposition des Parisiens aux ondes, tout en continuant à faire de Paris une capitale numérique, c'est le double objectif de la nouvelle charte de téléphonie mobile que la maire soumettra fin mars au Conseil de Paris. Il s'agit de trouver un équilibre entre préoccupations de santé publique et bonne qualité du service de téléphonie mobile.\n\nD'après lemonde.fr",
+    "q": "Quel est l'objectif de la ville de Paris ?",
+    "c": ["Améliorer la puissance de la réception.", "Diminuer les risques sanitaires.", "Limiter les dépenses de la ville.", "Respecter les normes internationales."],
+    "a": 1,
+    "k": "réduire de 30%"
+  },
+  {
+    "t": "Les conséquences de l'analphabétisme sont profondes, au point qu'elles peuvent mettre la vie en danger. Elles s'enracinent dans le refus d'un droit humain fondamental : le droit à l'éducation. À l'échelle de la société, dénier le droit à l'éducation s'est hypothéqué le progrès démocratique et social – et par conséquent, la paix et la sécurité internationales. En empêchant les enfants de se développer pleinement, l'analphabétisme sème d'embûches leur chemin vers l'âge adulte et rend encore plus difficile leur compréhension du monde dans sa diversité aussi bien que des valeurs de paix et d'égalité entre les personnes. L'analphabétisme prive également l'individu d'autres joies, comme celles de la culture et de l'art en général.",
+    "q": "Selon ce texte, que favorise le respect du droit à l'éducation ?",
+    "c": ["La constitution d'une culture nationale.", "La stimulation de la croissance économique.", "L'amélioration des comportements sanitaires.", "Le développement d'une conscience civique."],
+    "a": 3,
+    "k": "le progrès démocratique et social"
+  },
+  {
+    "t": "Plus de 40% des espèces d'insectes sont en déclin et un tiers sont menacés. Leur taux de mortalité est huit fois plus rapide que celui des mammifères. À ce rythme, s'inquiètent les scientifiques, les insectes pourraient disparaître d'ici un siècle. Cette prévision est préoccupante, car ils sont essentiels au bon fonctionnement de tous les écosystèmes. Ils pollinisent les plantes, recyclent les nutriments et servent de nourriture aux autres animaux. Leur disparition « aura des conséquences catastrophiques à la fois pour les écosystèmes de la planète et pour la survie de l'humanité ». « Si les modes de production alimentaire ne changent pas, les insectes dans leur ensemble s'engageront sur la voie de l'extinction dans quelques décennies », écrivent les chercheurs.\n\nD'après lemonde.fr",
+    "q": "D'après l'article, qu'est-ce qui est à l'origine de la disparition des insectes ?",
+    "c": ["Les changements de climat.", "Les méthodes de culture.", "Les oiseaux prédateurs.", "Les politiques publiques."],
+    "a": 1,
+    "k": "modes de production alimentaire"
+  },
+  {
+    "t": "Deux mondes s'affrontent : ceux de l'ancienne agriculture et de la nouvelle. Le productivisme soutenu par la chimie a fait progresser comme jamais les rendements agricoles, nourri la planète et abaissé le prix des denrées. Mais il fait son temps. Les tenants du passé, dont on peut comprendre les motivations, tant les agriculteurs travaillent sous la pression éreintante de la compétitivité, soutiennent qu'il n'existe pas d'autre solution. Notre enquête montre le contraire : l'alliance de la technologie et de l'écologie pour remplacer des substances nocives par une panoplie de techniques inédites, offre une alternative originale, crédible et soutenable à la dispersion incontrôlée de composants chimiques nuisibles à tous. C'est la voie de la sagesse autant que de la modernité.\n\nD'après Libération.fr",
+    "q": "Que défend le journaliste ?",
+    "c": ["L'accès universel à des aliments bon marché.", "L'innovation des procédés de production.", "Le développement du commerce équitable.", "Le partage d'expériences traditionnelles."],
+    "a": 1,
+    "k": "une alternative originale, crédible et soutenable"
+  },
+  {
+    "t": "« Il faut te le dire en quelle langue ? » Cette question, que des milliers de mères posent à leur enfant lorsqu'elles veulent se faire écouter, est en fait très sensée (comme tout ce que disent les mères). Des travaux scientifiques récents ont en effet démontré une réalité étonnante : Nous réfléchissons et prenons des décisions différemment lorsque nous traitons l'information dans une autre langue que notre langue maternelle. Nous comprenons tout aussi bien l'idée ou le problème mais, lorsque nous utilisons une autre langue, le résultat est plus réfléchi, moins dicté par les émotions, plus orienté vers l'utilité.",
+    "q": "Que permet l'utilisation d'une langue autre que la langue maternelle ?",
+    "c": ["D'attirer l'attention de l'interlocuteur.", "D'imaginer des solutions originales.", "De solliciter davantage la raison.", "De trouver des réponses rapides."],
+    "a": 2,
+    "k": "moins dicté par les émotions"
+  },
+  {
+    "t": "Depuis un an, l'association du Théâtre de la poudrerie, située à Sevran, à quelques kilomètres de Paris, a organisé des représentations gratuites à domicile d'une pièce inédite. Pour cela, l'association a convié une auteure professionnelle à venir en résidence pour l'écrire. Elle a recueilli le témoignage d'une trentaine d'habitantes sur le thème du pouvoir féminin, puis écrit son texte à partir de cette matière première. L'enjeu pour cette association est que les spectateurs s'approprient la pièce : quand il y a un phénomène d'identification, la parole se libère lors de la rencontre qui suit la représentation. Ce phénomène est amplifié par ce cadre intimiste qui favorise le rapprochement des spectateurs et des comédiens.",
+    "q": "Quel objectif poursuit cette association avec ce projet ?",
+    "c": ["Encourager le dialogue avec le public.", "Former des acteurs en banlieue.", "Réaliser une œuvre à plusieurs mains.", "Sensibiliser à l'égalité des sexes."],
+    "a": 0,
+    "k": "la parole se libère lors de la rencontre"
+  },
+  {
+    "t": "Le stress est l'ennemi numéro 1 du bien-être. Quand il prend le dessus, on perd sa motivation et on manque continuellement d'énergie.\n\nLes médecins sont formels : le stress est souvent à l'origine de dysfonctionnements physiques. C'est aussi une cause directe du vieillissement prématuré. Une personne stressée se replie sur elle-même et renonce progressivement à profiter de certaines de ses capacités mentales. Voici comment canaliser ce stress pour le transformer en énergie positive : apprendre à bien respirer, ne plus gaspiller ses forces à réfléchir aux actions de passé, changer les mauvaises habitudes et finalement savoir se ménager au quotidien.",
+    "q": "Qu'apprend-on sur le stress dans cet article ?",
+    "c": ["C'est un handicap qui peut se transformer en atout.", "Il décuple l'ensemble des aptitudes cérébrales.", "Il est officiellement reconnu comme une maladie.", "Ses effets touchent plus particulièrement les seniors."],
+    "a": 0,
+    "k": "transformer en énergie positive"
+  },
+  {
+    "t": "Souvent critiquée pour la qualité de son service, la société berlinoise des transports en commun a fait parler d'elle, en proposant 500 paires de « chaussures-billets » aux couleurs des banquettes du métro berlinois. Vendus 180 euros, ces baskets incluent un abonnement annuel métro - bus - tram (hors trains de banlieue), contre 761 euros pour un forfait classique. Les consommateurs séduits par ce concept commercial qui permet de voyager presque gratuitement sur une partie du réseau ont formé une longue file d'attente. Certains ont même tenté de revendre en ligne leur paire « collector », à un tarif de base quintuplé.\n\nD'après lexpress.fr",
+    "q": "Quel est l'objectif de la société berlinoise des transports ?",
+    "c": ["Attirer l'attention grâce à un coup de publicité.", "Concurrencer les autres moyens de locomotion.", "Multiplier le nombre de souscripteurs par internet.", "Permettre de voyager extramuros à moindres frais."],
+    "a": 0,
+    "k": "a fait parler d'elle"
+  },
+  {
+    "t": "« Un produit qui ne s'userait pas serait une tragédie pour les affaires », lisait-on dans une ancienne revue américaine. Des années plus tard, le concept d'obsolescence programmée n'a pas pris une ride ! Il s'agit pour les fabricants de réduire volontairement la durée de vie ou d'emploi d'un produit afin d'en augmenter le taux de remplacement. Ici se cache le cœur de la course à la consommation. Le bilan écologique est également sans appel : les matières que contiennent nos appareils finissent en grande partie en déchets incinérés ou enfouis. L'exemple du téléphone portable en dit long : dans un rapport, une sénatrice ne souligne que « la conception des téléphones est délibérément défavorable au réemploi et au recyclage ».",
+    "q": "Que constate ce journaliste à propos des articles proposés par les fabricants ?",
+    "c": ["Ils se détériorent après un certain temps.", "Ils sont dangereux pour la santé.", "Ils sont nuisibles pour l'environnement.", "Ils sont vendus à des prix élevés."],
+    "a": 0,
+    "k": "réduire volontairement la durée de vie"
+  },
+  {
+    "t": "Le Sénat a adopté une proposition de loi visant à lutter contre l'exposition précoce des enfants aux écrans. Elle prévoit qu'un message avertissant des dangers des écrans chez les enfants de moins de 3 ans devra apparaître sur les emballages des outils et jeux numériques. Cette initiative salutaire n'a rien d'un gadget : de nombreux psychologues et pédopsychiatres ne considèrent que l'exposition aux écrans avant 3 ans peut être nocive pour un cerveau en construction, notamment parce qu'elle parasite l'interaction avec autrui. Verra-t-on bientôt un autocollant « à utiliser avec modération » ? Sur les consoles de jeu et les tablettes ?",
+    "q": "D'après cet article, quel est l'objectif de cette loi ?",
+    "c": ["Encadrer le marché du numérique.", "Prévenir l'addiction aux jeux vidéo.", "Protéger les enfants des ondes.", "Restreindre l'impact des écrans."],
+    "a": 3,
+    "k": "l'exposition précoce des enfants aux écrans"
+  },
+  {
+    "t": "Maintenant elles étaient là. Non plus en éveil, en méfiance, et rassemblées sous l'influence de la crainte par troupes, hardes, files et bandes, selon la race, la tribu, la famille, mais confondues et mêlées au sein d'une sécurité ineffable dans la trêve de l'eau, en paix avec la brousse, elles-mêmes et l'aurore. À la distance où je me trouvais, il n'était pas possible de distinguer l'inflexion des mouvements, ou l'harmonie des couleurs, mais cette distance ne m'empêchait pas de voir que les bêtes se comptaient par centaines et centaines, que toutes les espèces voisinaient, et que cet instant de leur vie ne connaissait pas la peur ou la hâte. Gazelles, antilopes, girafes, gnous, zèbres, rhinocéros, buffles, éléphants – les animaux s'arrêtaient ou se déplaçaient au pas du loisir au gré de la soif, au goût du hasard.",
+    "q": "Quelle phrase résume exactement cet extrait de roman ?",
+    "c": ["Je ressentais pleinement l'anxiété des bêtes.", "Je percevais parfaitement la quiétude de cet instant.", "Je découvrais inopinément un spectacle effrayant et inquiétant.", "J'éprouvais un sentiment de crainte face à ces troupeaux d'animaux sauvages."],
+    "a": 1,
+    "k": "ne connaissait pas la peur ou la hâte"
+  },
+  {
+    "t": "Les études le montrent : loin de disparaître, la pause-déjeuner reste un moment sacré pour une très grande majorité du personnel. Et pas seulement pour se restaurer et recharger ses batteries. Cette coupure rituelle est aussi l'occasion de partager un moment avec ses collègues, d'échanger, de nouer des liens de convivialité. Immuable, la pause-déjeuner connaît pourtant depuis quelques années d'importantes mutations. La crise économique a évidemment eu ses effets, en pesant sur le budget du consommateur. Mais les bouleversements vont au-delà de ces aspects purement financiers et s'étendent au domaine alimentaire. Autrefois prépondérant, le souci de quantité a laissé la place à la sélection, gage selon les consommateurs de plus de qualité. Dans les restaurants d'entreprises, les salariés vont privilégier une offre moins large, mais mieux choisie.",
+    "q": "Qu'apprend-on sur la pause-déjeuner au travail ?",
+    "c": ["Elle engendre une baisse du rendement du personnel.", "Elle est en partie prise en charge par les entreprises.", "Les employés sont attachés à l'origine des aliments.", "Les salariés ont tendance à la prendre à l'extérieur."],
+    "a": 2,
+    "k": "le souci de quantité a laissé la place à la sélection"
+  },
+  {
+    "t": "La créativité instinctive, qui serait naturelle, est souvent opposée à la créativité plus rationalisée, cérébrale éduquée, notamment en musique. Les musiciens ont tendance à surestimer la première, avec l'idée que moins on en sait, mieux c'est. Comme si la connaissance risquait de mettre des œillères et d'enfermer la créativité dans un cadre, à la manière d'un adulte qui s'autoriserait moins à imaginer des choses fantaisistes qu'on enfant. Ce n'est pas impossible, mais la créativité est la capacité du cerveau à faire des associations mentales originales et cohérentes. Une éducation musicale, associée à l'intelligence, peut faciliter ces associations puisqu'elle nourrit le cerveau d'expériences, notamment esthétiques pour les artistes, et d'idées que l'on peut ensuite lier.",
+    "q": "Que souligne ce journaliste à propos du processus de création musicale ?",
+    "c": ["Il mobilise une zone spécifique du cerveau.", "Il s'avère plus spontané chez les enfants.", "Il s'enrichit des connaissances théoriques.", "Il semble réservé aux esprits imaginatifs."],
+    "a": 2,
+    "k": "nourrit le cerveau d'expériences"
+  }
+]
+</script>
+<script>
+var QQ = JSON.parse(document.getElementById("qdata").textContent);
+var ans = {}, cur = 0;
+
+var LOGO_B64 = "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";
+
+function getPoints(i) {
+  var n = i + 1;
+  if (n <= 4)  return 3;
+  if (n <= 10) return 9;
+  if (n <= 19) return 15;
+  if (n <= 29) return 21;
+  if (n <= 35) return 26;
+  return 33;
+}
+
+function getNclc(score) {
+  if (score >= 549) return { level: "NCLC 10+", msg: "Excellent ! Niveau NCLC 10 et plus." };
+  if (score >= 524) return { level: "NCLC 9",   msg: "Très bien ! Niveau NCLC 9." };
+  if (score >= 499) return { level: "NCLC 8",   msg: "Très bien ! Niveau NCLC 8." };
+  if (score >= 453) return { level: "NCLC 7",   msg: "Objectif immigration atteint ! Niveau NCLC 7." };
+  if (score >= 406) return { level: "NCLC 6",   msg: "Encore un peu d'effort pour atteindre le NCLC 7 !" };
+  if (score >= 375) return { level: "NCLC 5",   msg: "Continuez à pratiquer, niveau NCLC 5." };
+  if (score >= 342) return { level: "NCLC 4",   msg: "Continuez à pratiquer, niveau NCLC 4." };
+  return { level: "En dessous de NCLC 4", msg: "Continuez à pratiquer !" };
+}
+
+function esc(s) {
+  var t = String(s);
+  t = t.replace(/&/g, "&amp;");
+  t = t.replace(/</g, "&lt;");
+  t = t.replace(/>/g, "&gt;");
+  return t;
+}
+
+function hl(text, key) {
+  var h = esc(text).split("\n").join("<br>");
+  try {
+    var ek = esc(key);
+    var idx = h.toLowerCase().indexOf(ek.toLowerCase());
+    if (idx >= 0) {
+      h = h.substring(0, idx) + "<mark>" + h.substring(idx, idx + ek.length) + "</mark>" + h.substring(idx + ek.length);
+    }
+  } catch(e) {}
+  return h;
+}
+
+function headerHtml() {
+  var answered = Object.keys(ans).length;
+  var pct = Math.round(answered / QQ.length * 100);
+  var fill = Math.round(answered / QQ.length * 100);
+  return '<div class="header">' +
+    '<div style="font-size:28px;font-weight:800;color:#1D9E75;letter-spacing:-1px">TCF</div>' +
+    '<div class="header-right">' +
+      '<div class="header-title">Compréhension écrite – Test 40</div>' +
+      '<div class="header-sub">' + QQ.length + ' questions &nbsp;|&nbsp; ' + answered + ' répondues</div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="prog-wrap">' +
+    '<div class="prog-bar"><div class="prog-fill" style="width:' + fill + '%"></div></div>' +
+    '<div class="prog-labels"><span>Question ' + (cur + 1) + " / " + QQ.length + '</span><span>' + pct + '% complété</span></div>' +
+  '</div>';
+}
+
+function render(i) {
+  cur = i;
+  var q = QQ[i], ua = ans[i], done = ua !== undefined;
+  var textHtml = done ? hl(q.t, q.k) : esc(q.t).split("\n").join("<br>");
+  var keyLabel = done ? "<div class=\"key-label\">🔑 Phrase-clé surlignée</div>" : "";
+
+  var navHtml = "<div class=\"nav\">" +
+    (cur > 0 ? "<button class=\"btn\" onclick=\"render(" + (cur - 1) + ")\">← Précédente</button>" : "<button class=\"btn\" disabled style=\"opacity:.4\">← Précédente</button>") +
+    (cur < QQ.length - 1 ? "<button class=\"btn\" onclick=\"render(" + (cur + 1) + ")\">Suivante →</button>" : "<button class=\"btn\" disabled style=\"opacity:.4\">Suivante →</button>") +
+    "<button class=\"btn btn-results\" onclick=\"summary()\">Résultats</button>" +
+  "</div>";
+
+  var choicesHtml = "<div class=\"choices\">";
+  var labels = ["A", "B", "C", "D"];
+  for (var c = 0; c < q.c.length; c++) {
+    var cls = "choice";
+    if (done) {
+      if (c === q.a) cls += " correct";
+      else if (ua.choice === c) cls += " wrong";
+    }
+    var onclick = done ? "" : "onclick=\"pick(" + i + "," + c + ")\"";
+    choicesHtml += "<button class=\"" + cls + "\" " + onclick + "><span class=\"badge\">" + labels[c] + "</span><span>" + esc(q.c[c]) + "</span></button>";
+  }
+  choicesHtml += "</div>";
+
+  var feedbackHtml = "";
+  if (done) {
+    if (ua.ok) {
+      feedbackHtml = "<div class=\"feedback ok\">✅ Correct !</div>";
+    } else {
+      feedbackHtml = "<div class=\"feedback ko\">❌ Incorrect — La bonne réponse est : <strong>" + labels[q.a] + ") " + esc(q.c[q.a]) + "</strong></div>";
+    }
+  }
+
+  document.getElementById("view").innerHTML =
+    headerHtml() +
+    navHtml +
+    "<div class=\"textbox\">" + textHtml + "</div>" +
+    keyLabel +
+    "<div class=\"question\">" + esc(q.q) + "</div>" +
+    choicesHtml +
+    feedbackHtml;
+
+  try { sessionStorage.setItem("tcf40_ans", JSON.stringify(ans)); sessionStorage.setItem("tcf40_cur", cur); } catch(e) {}
+}
+
+function pick(qi, ci) {
+  if (ans[qi] !== undefined) return;
+  ans[qi] = { choice: ci, ok: ci === QQ[qi].a };
+  render(qi);
+}
+
+function summary() {
+  var ok = 0, score = 0;
+  for (var k in ans) { if (ans[k].ok) { ok++; score += getPoints(parseInt(k)); } }
+  var nclc = getNclc(score);
+  var labels = ["A","B","C","D"];
+
+  var gridHtml = "<div class=\"grid\">";
+  for (var i = 0; i < QQ.length; i++) {
+    var cls = "gcell na";
+    var lbl = i + 1;
+    if (ans[i] !== undefined) cls = ans[i].ok ? "gcell ok" : "gcell ko";
+    gridHtml += "<div class=\"" + cls + "\" onclick=\"render(" + i + ")\" title=\"Q" + lbl + "\">" + lbl + "</div>";
+  }
+  gridHtml += "</div>";
+
+  document.getElementById("view").innerHTML =
+    headerHtml() +
+    "<div class=\"summary-card\">" +
+      "<div style=\"font-size:15px;color:#555;margin-bottom:4px\">Résultats</div>" +
+      "<div class=\"score-big\">" + ok + " / " + QQ.length + " <span style=\"font-size:16px;color:#555\">réponses correctes</span></div>" +
+      "<div style=\"font-size:22px;font-weight:700;margin:8px 0\">Score TCF estimé : <span style=\"color:#1a1a1a\">" + score + " / 699</span></div>" +
+      "<div class=\"nclc-badge\">" + nclc.level + "</div>" +
+      "<div style=\"font-size:14px;color:#555;margin-bottom:1rem\">" + esc(nclc.msg) + "</div>" +
+      gridHtml +
+      "<div style=\"margin-top:.5rem\">" +
+        "<button class=\"btn-report\" onclick=\"showReport()\">📋 Voir le rapport des erreurs</button>" +
+        "<button class=\"btn-restart\" onclick=\"restart()\">↺ Recommencer</button>" +
+      "</div>" +
+      "<div class=\"note-small\">* Score estimatif à titre indicatif</div>" +
+    "</div>";
+}
+
+function showReport() {
+  var labels = ["A","B","C","D"];
+  var html = "<button class=\"btn-back\" onclick=\"summary()\">← Retour aux résultats</button>";
+  html += "<h2 style=\"font-size:18px;font-weight:700;margin-bottom:1rem\">📋 Rapport des erreurs</h2>";
+
+  var found = false;
+  for (var i = 0; i < QQ.length; i++) {
+    if (ans[i] !== undefined && !ans[i].ok) {
+      found = true;
+      var q = QQ[i];
+      html += "<div class=\"report-q\">";
+      html += "<div style=\"font-size:12px;color:#888;margin-bottom:.4rem\">Question " + (i+1) + "</div>";
+      html += "<div class=\"r-text\">" + hl(q.t, q.k) + "</div>";
+      html += "<div class=\"key-label\">🔑 Phrase-clé surlignée</div>";
+      html += "<div style=\"font-weight:600;font-size:14px;margin:.5rem 0\">" + esc(q.q) + "</div>";
+      for (var c = 0; c < q.c.length; c++) {
+        var cls2 = "choice";
+        if (c === q.a) cls2 += " correct";
+        else if (ans[i].choice === c) cls2 += " wrong";
+        html += "<div class=\"" + cls2 + "\" style=\"margin-bottom:6px\"><span class=\"badge\">" + labels[c] + "</span><span>" + esc(q.c[c]) + "</span></div>";
+      }
+      html += "</div>";
+    }
+  }
+
+  if (!found) {
+    html += "<div style=\"font-size:15px;color:#1D9E75;font-weight:600\">🎉 Aucune erreur ! Parfait !</div>";
+  }
+
+  document.getElementById("view").innerHTML = html;
+}
+
+function restart() {
+  ans = {};
+  cur = 0;
+  try { sessionStorage.removeItem("tcf40_ans"); sessionStorage.removeItem("tcf40_cur"); } catch(e) {}
+  render(0);
+}
+
+window.onload = function() {
+  try {
+    var savedAns = sessionStorage.getItem("tcf40_ans");
+    var savedCur = sessionStorage.getItem("tcf40_cur");
+    if (savedAns) ans = JSON.parse(savedAns);
+    if (savedCur) cur = parseInt(savedCur);
+  } catch(e) {}
+  render(cur);
+};
+</script>
+</body>
+</html>
